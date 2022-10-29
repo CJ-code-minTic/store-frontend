@@ -1,65 +1,56 @@
-import './App.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route  
-} from "react-router-dom";
-import Container from 'react-bootstrap/Container';
-import Nav from 'react-bootstrap/Nav';
-import Navbar from 'react-bootstrap/Navbar';
-// import NavDropdown from 'react-bootstrap/NavDropdown';
-import { Row,Col } from 'react-bootstrap';
-import ListAdminProduct from './pages/admin/products/List';
-import Create from './pages/admin/products/Create';
-import Sales from './pages/admin/sales/Sales';
-import ListClientProduct from './pages/client/products/List';
-import Cart from './pages/client/shop/Cart';
+import React from 'react'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import NavBar from './components/Navbar'
+import ProductsListPage from './pages/Products'
+import ProductDetailsPage from './pages/ProductDetail'
+import Login from './pages/Login'
+import ProductCreatePage from './pages/ProductCreate'
+import ProductUpdatePage from './pages/ProductUpdate'
+// import CheckoutPage from './pages/CheckoutPage'
+// import PaymentStatus from './components/PaymentStatus'
+// import Register from './pages/RegisterPage'
+// import CardUpdatePage from './pages/CardUpdatePage'
+// import CardDetailsPage from './pages/CardDetailsPage'
+// import AccountPage from './pages/AccountPage'
+// import AccountUpdatePage from './pages/AccountUpdatePage'
+// import DeleteUserAccountPage from './pages/DeleteUserAccountPage'
+// import AllAddressesOfUserPage from './pages/AllAddressesOfUserPage'
+// import AddressUpdatePage from './pages/AddressUpdatePage'
+// import OrdersListPage from './pages/OrdersListPage'
+// import NotFound from './pages/NotFoundPage'
 
-function App() {
+
+const App = () => {
+
   return (
-    <Router>
-      <Container fluid>
-        <Row>
-          <Col md={12}>
-      <Navbar bg="light" expand="lg">      
-        <Navbar.Brand href="home">Tienda el Paco</Navbar.Brand>
-        <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="me-auto">
-            <Nav.Link href="/home">Cliente Lista Productos</Nav.Link>
-            <Nav.Link href="/cart">Cliente Carrito</Nav.Link>
-            <Nav.Link href="/admin/product">Amdinistrador Lista Productos</Nav.Link>
-            <Nav.Link href="/admin/create">Amdinistrador Administracion Productos</Nav.Link>
-            <Nav.Link href="/admin/sales">Amdinistrador Lista Ventas</Nav.Link>
-            {/* <NavDropdown title="Dropdown" id="basic-nav-dropdown">
-              <NavDropdown.Item href="action/3.1">Action</NavDropdown.Item>
-              <NavDropdown.Item href="action/3.2">
-                Another action
-              </NavDropdown.Item>
-              <NavDropdown.Item href="action/3.3">Something</NavDropdown.Item>
-              <NavDropdown.Divider />
-              <NavDropdown.Item href="action/3.4">
-                Separated link
-              </NavDropdown.Item>
-            </NavDropdown> */}
-          </Nav>
-        </Navbar.Collapse>      
-    </Navbar>        
-        {/* A <Switch> looks through its children <Route>s and
-            renders the first one that matches the current URL. */}
-        <Routes>
-          <Route path="/admin/product" element={<ListAdminProduct />} />
-          <Route path="/admin/create" element={<Create />} />
-          <Route path="/admin/sales" element={<Sales />} />
-          <Route path="/home" element={<ListClientProduct />} />
-          <Route path="/cart" element={<Cart />} />
-        </Routes>
-        </Col>
-        </Row>
-        </Container>
-    </Router>
-  );
+    <div>
+      <Router>
+        <NavBar />
+        <div className="container mt-4">
+          <Routes>
+            <Route path="/" element={<ProductsListPage/>} exact />
+            <Route path="/product/:id/" element={<ProductDetailsPage/>} exact />
+            <Route path="/login" element={<Login/>} exact />
+            <Route path="/new-product/" element={<ProductCreatePage/>} exact />            
+            <Route path="/product-update/:id/" element={<ProductUpdatePage/>} exact />
+            {/* 
+            <Route path="/product/:id/checkout/" component={CheckoutPage} exact />
+            <Route path="/payment-status" component={PaymentStatus} exact />            
+            <Route path="/register" component={Register} exact />
+            <Route path="/account" component={AccountPage} exact />
+            <Route path="/account/update/" component={AccountUpdatePage} exact />
+            <Route path="/account/delete/" component={DeleteUserAccountPage} exact />
+            <Route path="/stripe-card-details" component={CardDetailsPage} exact />
+            <Route path="/stripe-card-update" component={CardUpdatePage} exact />
+            <Route path="/all-addresses/" component={AllAddressesOfUserPage} exact />
+            <Route path="/all-addresses/:id/" component={AddressUpdatePage} exact />
+            <Route path="/all-orders/" component={OrdersListPage} exact />
+            <Route path="" component={NotFound} exact /> */}
+          </Routes>
+        </div>
+      </Router>
+    </div >
+  )
 }
 
-export default App;
+export default App
