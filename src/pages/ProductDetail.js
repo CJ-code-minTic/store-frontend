@@ -91,7 +91,7 @@ function ProductDetailsPage({ history, match }) {
             {/* Modal End */}
 
             {loading && <span style={{ display: "flex" }}>
-                <h5>Getting Product Details</h5>
+                <h5>Obteniendo Detalles del Producto</h5>
                 <span className="ml-2">
                     <Spinner animation="border" />
                 </span>
@@ -142,17 +142,17 @@ function ProductDetailsPage({ history, match }) {
                                 </span>
                             </Col>
                             <Col sm>
-                                <b>Buy</b>
+                                <b>Comprar</b>
                                 <hr />
                                 {product.stock ?
                                     <Link to={`${product.id}/checkout/`}>
-                                        <button className="btn btn-primary">
-                                            <span>Pay with Stripe</span>
+                                        <button className="btn btn-success">
+                                            <span>Añadir al Carrito</span>
                                         </button>
                                     </Link>
                                     :
                                     <Message variant='danger'>
-                                        Out Of Stock!
+                                        Agotado!
                                     </Message>}
                             </Col>
                         </Row>

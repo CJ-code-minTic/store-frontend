@@ -106,13 +106,13 @@ const ProductUpdatePage = ({ match }) => {
                 </div>
             ) : ""}
             {loadingPageDetails && <span style={{ display: "flex" }}>
-                <h5>Getting Product Details</h5>
+                <h5>Obteniendo Detalles del Producto</h5>
                 <span className="ml-2">
                     <Spinner animation="border" />
                 </span>
             </span>}
             {loadingProductUpdations ? <span style={{ display: "flex" }}>
-                <h5>Updating Product</h5>
+                <h5>Actualizando Productos</h5>
                 <span className="ml-2">
                     <Spinner animation="border" />
                 </span>
