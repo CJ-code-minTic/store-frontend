@@ -7,7 +7,6 @@ import { checkTokenValidation, logout } from '../actions/User'
 import { CREATE_PRODUCT_RESET } from '../constants'
 import Message from '../components/Message';
 
-
 const ProductCreatePage = () => {
 
     let navigate = useNavigate()

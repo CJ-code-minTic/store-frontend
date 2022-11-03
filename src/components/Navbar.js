@@ -6,7 +6,6 @@ import { logout } from '../actions/User'
 import { useNavigate } from "react-router-dom";
 import SearchBarForProducts from './SearchBarProducts'
 
-
 function NavBar() {
 
     let history = useNavigate()

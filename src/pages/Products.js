@@ -7,7 +7,6 @@ import Product from '../components/Product'
 import { useLocation } from "react-router-dom";
 import { CREATE_PRODUCT_RESET } from '../constants'
 
-
 function ProductsListPage() {
 
     //let history = useNavigate()

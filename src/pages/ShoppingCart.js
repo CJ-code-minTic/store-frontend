@@ -7,7 +7,6 @@ import ProductShoppingCart from '../components/ProductShoppingCart'
 import { useLocation,useNavigate } from "react-router-dom";
 import { ADD_SHOPPING_CART_RESET, DELETE_PRODUCT_SHOPPING_CART_RESET, FINISH_SHOP_RESET } from '../constants'
 
-
 function ShopingCartListPage() {
 
     let navigate = useNavigate()

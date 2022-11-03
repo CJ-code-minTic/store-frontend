@@ -8,7 +8,6 @@ import { checkTokenValidation, logout } from '../actions/User'
 import { UPDATE_PRODUCT_RESET } from '../constants'
 import Message from '../components/Message'
 
-
 const ProductUpdatePage = ({ match }) => {
 
     let { id } = useParams();

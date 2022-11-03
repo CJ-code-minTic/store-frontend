@@ -1,6 +1,7 @@
 import React from 'react'
 import Message from '../components/Message'
 
+
 function NotFoundPage() {
     return (
         <div>
@@ -10,5 +11,6 @@ function NotFoundPage() {
         </div>
     )
 }
+
 
 export default NotFoundPage
