@@ -22,11 +22,31 @@ import {
     CHANGE_DELIVERY_STATUS_REQUEST,
     CHANGE_DELIVERY_STATUS_SUCCESS,
     CHANGE_DELIVERY_STATUS_FAIL,
+    
+    ADD_SHOPPING_CART_REQUEST,
+    ADD_SHOPPING_CART_SUCCESS,
+    ADD_SHOPPING_CART_FAIL,
+
+    SHOPPING_CART_LIST_REQUEST,
+    SHOPPING_CART_LIST_SUCCESS,
+    SHOPPING_CART_LIST_FAIL,
+
+    DELETE_PRODUCT_SHOPPING_CART_REQUEST,
+    DELETE_PRODUCT_SHOPPING_CART_SUCCESS,
+    DELETE_PRODUCT_SHOPPING_CART_FAIL,    
+    FINISH_SHOP_FAIL,
+    FINISH_SHOP_REQUEST,
+    FINISH_SHOP_SUCCESS,
+    SALES_LIST_FAIL,
+    SALES_LIST_REQUEST,
+    SALES_LIST_SUCCESS
 
 } from '../constants/index'
 
 //import axios from 'axios'
-import { productData } from '../constants/data'
+import { productData,shoppingCart,sales } from '../constants/data'
+
+const aux = false
 
 export const getProductsList = () => async (dispatch) => {
     try {
@@ -62,7 +82,7 @@ export const getProductDetails = (id) => async (dispatch) => {
         let dataDetail
 
         for(var i = 0;i<productData.length;i++){
-            if(productData[i].id == id){
+            if(productData[i].id === id){
                 dataDetail = productData[i]
             } 
         }
@@ -86,9 +106,9 @@ export const deleteProduct = (id) => async (dispatch, getState) => {
         })
 
         // login reducer
-        const {
-            userLoginReducer: { userInfo },
-        } = getState()
+        // const {
+        //     userLoginReducer: { userInfo },
+        // } = getState()
 
         // const config = {
         //     headers: {
@@ -104,7 +124,7 @@ export const deleteProduct = (id) => async (dispatch, getState) => {
         // )
 
         for(var i = 0;i<productData.length;i++){            
-            if(productData[i].id == id){                
+            if(productData[i].id === id){                
                 productData.splice(i,1)
             } 
         }        
@@ -130,9 +150,9 @@ export const createProduct = (product) => async (dispatch, getState) => {
         })
 
         // login reducer
-        const {
-            userLoginReducer: { userInfo },
-        } = getState()
+        // const {
+        //     userLoginReducer: { userInfo },
+        // } = getState()
 
         // const config = {
         //     headers: {
@@ -180,9 +200,9 @@ export const updateProduct = (id, product) => async (dispatch, getState) => {
         })
 
         // login reducer
-        const {
-            userLoginReducer: { userInfo },
-        } = getState()
+        // const {
+        //     userLoginReducer: { userInfo },
+        // } = getState()
 
         // const config = {
         //     headers: {
@@ -208,14 +228,10 @@ export const updateProduct = (id, product) => async (dispatch, getState) => {
         }
 
         for(var i = 0;i<productData.length;i++){            
-            if(productData[i].id == id){                                
-                productData[i] = product
-                console.log(productData[i])
+            if(productData[i].id === id){                                
+                productData[i] = product                
             } 
-        }
-
-        console.log(productData)
-        
+        }                
 
         dispatch({
             type: UPDATE_PRODUCT_SUCCESS,
@@ -226,6 +242,197 @@ export const updateProduct = (id, product) => async (dispatch, getState) => {
         dispatch({
             type: UPDATE_PRODUCT_FAIL,
             payload: error.response && error.response.data.detail ? error.response.data.detail : error.message
+        })
+    }
+}
+
+export const addShoppingCart = (data) => async (dispatch,getState)=>{
+    try {
+        dispatch({
+            type:ADD_SHOPPING_CART_REQUEST
+        })
+
+        const {
+            userLoginReducer: {userInfo}
+        } = getState ()
+
+        let newProduct = true;
+
+        let cartData = {
+            id:null,
+            image:null,
+            name:null,
+            amount:null,
+            price:null,
+            totalPrice:null
+        }
+
+        for(var i = 0;i<productData.length;i++){
+            if(productData[i].id === data.id){
+                if(productData[i].amount < data.amount){
+                    throw new Error("Cantidad No Disponible")
+                }
+                cartData.id = productData[i].id
+                cartData.image = productData[i].image
+                cartData.name = productData[i].name
+                cartData.amount = data.amount
+                cartData.price = productData[i].price
+                cartData.totalPrice = productData[i].price * data.amount
+                productData[i].amount -= data.amount
+                if(productData[i].amount === 0)productData[i].stock = false
+            }
+        }
+
+        for(var i=0;i<shoppingCart.length;i++){
+            if(shoppingCart[i].id === data.id){
+                shoppingCart[i].amount += data.amount
+                shoppingCart[i].totalPrice = shoppingCart[i].amount * shoppingCart[i].price
+                newProduct = false;
+            }
+        }        
+
+        if(newProduct)shoppingCart.push(cartData)
+        
+        dispatch({
+            type:ADD_SHOPPING_CART_SUCCESS,
+            payload: shoppingCart
+        })        
+
+    } catch (error) {        
+        dispatch({
+            type: ADD_SHOPPING_CART_FAIL,
+            payload: error.response && error.response.data.detail ? error.response.data.detail : error.message            
+        })
+    }
+}
+
+export const getProductsShoppingCart = () => async(dispatch) => {
+    try {
+
+        dispatch({
+            type:SHOPPING_CART_LIST_REQUEST
+        })
+
+        let totalCart = 0
+
+        for(var i=0;i<shoppingCart.length;i++){
+            totalCart += shoppingCart[i].totalPrice
+        }        
+
+        dispatch({
+            type:SHOPPING_CART_LIST_SUCCESS,
+            payload: shoppingCart,
+            total: totalCart
+        })
+        
+    } catch (error) {
+        dispatch({
+            type:SHOPPING_CART_LIST_FAIL,
+            payload: error.message
+        })
+    }
+}
+
+export const deleteProductShoppingCart = () => async (dispatch) => {
+    try {
+
+        dispatch({
+            type:DELETE_PRODUCT_SHOPPING_CART_REQUEST
+        })
+
+        const length = shoppingCart.length
+
+        for(var i=0;i<length;i++){            
+            for(var j=0;j<productData.length;j++){
+                if(productData[j].id === shoppingCart[i].id){
+                    productData[j].amount += shoppingCart[i].amount
+                    productData[j].stock = true
+                }                
+            }                        
+        }
+
+        for(var i=0;i<=length;i++){
+            shoppingCart.splice(i)
+        }                
+
+        dispatch({
+            type:DELETE_PRODUCT_SHOPPING_CART_SUCCESS,
+            data:shoppingCart
+        })
+        
+    } catch (error) {                
+        dispatch({
+            type:DELETE_PRODUCT_SHOPPING_CART_FAIL,
+            payload: error.message
+        })
+    }
+}
+
+export const finish = () => (dispatch) =>{
+    try {
+        dispatch({
+            type:FINISH_SHOP_REQUEST
+        })        
+
+        let total = 0
+
+        let salesData = {
+            id:null,
+            date:null,
+            total:null
+        }
+
+        for(var i=0;i<shoppingCart.length;i++){
+            total += shoppingCart[i].totalPrice
+        }
+
+        for(var i=0;i<=shoppingCart.length;i++){
+            shoppingCart.splice(i)
+        }
+
+        let today = new Date()        
+        
+        salesData.id = uuidv4()
+        salesData.date = today.toLocaleDateString()
+        salesData.total = total
+
+        sales.push(salesData)
+
+        console.log(sales)
+
+        dispatch({
+            type:FINISH_SHOP_SUCCESS,
+            payload: sales            
+        })
+    } catch (error) {
+        dispatch({
+            type:FINISH_SHOP_FAIL,
+            payload: error.message
+        })
+    }
+}
+
+export const getSales = () => async(dispatch) =>{
+    try {
+        dispatch({
+            type:SALES_LIST_REQUEST
+        })
+
+        let totalSales = 0;
+
+        for(var i=0;i<sales.length;i++){
+            totalSales += sales[i].total
+        }        
+
+        dispatch({
+            type:SALES_LIST_SUCCESS,
+            payload:sales,
+            total:totalSales
+        })
+    } catch (error) {
+        dispatch({
+            type:SALES_LIST_FAIL,
+            payload: error.message
         })
     }
 }

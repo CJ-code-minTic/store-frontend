@@ -6,6 +6,11 @@ import {
     updateProductReducer,
     deleteProductReducer,
     changeDeliveryStatusReducer,
+    addShoppingCartReducer,
+    getProductsShoppingCartReducer,
+    deleteProductShoppingCartReducer,
+    getSalesReducer,
+    finishReducer
 } from "./product";
 
 import {
@@ -37,6 +42,11 @@ const allReducers = combineReducers({
     createProductReducer,
     updateProductReducer,
     deleteProductReducer,
+    addShoppingCartReducer,
+    getProductsShoppingCartReducer,
+    deleteProductShoppingCartReducer,
+    finishReducer,
+    getSalesReducer,
     createCardReducer,
     chargeCardReducer,
     savedCardsListReducer,

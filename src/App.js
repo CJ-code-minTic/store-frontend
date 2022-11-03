@@ -6,7 +6,9 @@ import ProductDetailsPage from './pages/ProductDetail'
 import Login from './pages/Login'
 import ProductCreatePage from './pages/ProductCreate'
 import ProductUpdatePage from './pages/ProductUpdate'
-// import CheckoutPage from './pages/CheckoutPage'
+import CheckoutPage from './pages/Checkout'
+import ShopingCartListPage from './pages/ShoppingCart'
+import Sales from './pages/Sales'
 // import PaymentStatus from './components/PaymentStatus'
 // import Register from './pages/RegisterPage'
 // import CardUpdatePage from './pages/CardUpdatePage'
@@ -17,7 +19,7 @@ import ProductUpdatePage from './pages/ProductUpdate'
 // import AllAddressesOfUserPage from './pages/AllAddressesOfUserPage'
 // import AddressUpdatePage from './pages/AddressUpdatePage'
 // import OrdersListPage from './pages/OrdersListPage'
-// import NotFound from './pages/NotFoundPage'
+import NotFound from './pages/NotFound'
 
 
 const App = () => {
@@ -33,8 +35,11 @@ const App = () => {
             <Route path="/login" element={<Login/>} exact />
             <Route path="/new-product/" element={<ProductCreatePage/>} exact />            
             <Route path="/product-update/:id/" element={<ProductUpdatePage/>} exact />
-            {/* 
-            <Route path="/product/:id/checkout/" component={CheckoutPage} exact />
+            <Route path="/product/:idCheck/checkout/" element={<CheckoutPage/>} exact />
+            <Route path="/shopping-cart/" element={<ShopingCartListPage/>} exact />
+            <Route path="/sales" element={<Sales/>} exact />
+            <Route path="" element={<NotFound/>} exact />
+            {/*             
             <Route path="/payment-status" component={PaymentStatus} exact />            
             <Route path="/register" component={Register} exact />
             <Route path="/account" component={AccountPage} exact />
@@ -44,8 +49,7 @@ const App = () => {
             <Route path="/stripe-card-update" component={CardUpdatePage} exact />
             <Route path="/all-addresses/" component={AllAddressesOfUserPage} exact />
             <Route path="/all-addresses/:id/" component={AddressUpdatePage} exact />
-            <Route path="/all-orders/" component={OrdersListPage} exact />
-            <Route path="" component={NotFound} exact /> */}
+            <Route path="/all-orders/" component={OrdersListPage} exact />*/}
           </Routes>
         </div>
       </Router>

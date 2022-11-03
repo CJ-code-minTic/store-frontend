@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { deleteProduct, getProductDetails } from '../actions/Products'
+import { deleteProduct, getProductDetails, addShoppingCart } from '../actions/Products'
 import Message from '../components/Message'
-import { Spinner, Row, Col, Container, Card, Button, Modal } from 'react-bootstrap'
-import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { CREATE_PRODUCT_RESET, DELETE_PRODUCT_RESET, UPDATE_PRODUCT_RESET, CARD_CREATE_RESET } from '../constants'
+import { Spinner, Row, Col, Container, Card, Button, Modal, Form } from 'react-bootstrap'
+import { useNavigate } from 'react-router-dom'
+import { CREATE_PRODUCT_RESET, DELETE_PRODUCT_RESET, UPDATE_PRODUCT_RESET, CARD_CREATE_RESET, ADD_SHOPPING_CART_RESET } from '../constants'
 import { useParams } from "react-router-dom";
 
 
 function ProductDetailsPage({ history, match }) {
 
-    let { id } = useParams(); 
+    let { id } = useParams();
 
-    let location = useLocation();
+
 
     let navigate = useNavigate();
 
@@ -23,17 +23,23 @@ function ProductDetailsPage({ history, match }) {
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
+    const [amount, setAmount] = useState("")
+
     // product details reducer
     const productDetailsReducer = useSelector(state => state.productDetailsReducer)
     const { loading, error, product } = productDetailsReducer
 
     // login reducer
-    const userLoginReducer = useSelector(state => state.userLoginReducer)    
+    const userLoginReducer = useSelector(state => state.userLoginReducer)
     const { userInfo } = userLoginReducer
 
     // product details reducer
     const deleteProductReducer = useSelector(state => state.deleteProductReducer)
     const { success: productDeletionSuccess } = deleteProductReducer
+
+    //shopping cart reducer
+    const addShoppingCartReducer = useSelector(state => state.addShoppingCartReducer)
+    const { success: addShoppingCartSuccess, error: addShoppingCartError } = addShoppingCartReducer
 
     useEffect(() => {
         dispatch(getProductDetails(id))
@@ -46,12 +52,20 @@ function ProductDetailsPage({ history, match }) {
         dispatch({
             type: CARD_CREATE_RESET
         })
-    }, [dispatch])
+    }, [dispatch, id])
 
     // product delete confirmation
     const confirmDelete = () => {
         dispatch(deleteProduct(id))
         handleClose()
+    }
+
+    const onSubmit = () => {
+        let data = {
+            id: id,
+            amount: parseInt(amount)
+        }
+        dispatch(addShoppingCart(data))
     }
 
     // after product deletion
@@ -60,6 +74,14 @@ function ProductDetailsPage({ history, match }) {
         navigate("/")
         dispatch({
             type: DELETE_PRODUCT_RESET
+        })
+    }
+
+    if (addShoppingCartSuccess) {
+        alert("Producto añadido al carrito correctamente")
+        navigate("/shopping-cart")
+        dispatch({
+            type: ADD_SHOPPING_CART_RESET
         })
     }
 
@@ -96,6 +118,7 @@ function ProductDetailsPage({ history, match }) {
                     <Spinner animation="border" />
                 </span>
             </span>}
+            {addShoppingCartError ? <Message variant='danger'>{addShoppingCartError}</Message> : null}
             {error ? <Message variant='danger'>{error}</Message>
                 :
                 <div>
@@ -131,6 +154,9 @@ function ProductDetailsPage({ history, match }) {
                                 <span className="justify-description-css">
                                     <p>{product.description}</p>
                                 </span>
+                                <span className='justify-description-css'>
+                                    Cantidad: <p>{product.amount}</p>
+                                </span>
                                 <span style={{
                                     display: "flex",
                                     justifyContent: "center",
@@ -138,18 +164,41 @@ function ProductDetailsPage({ history, match }) {
                                     borderColor: "#C6ACE7",
                                     padding: "2px"
                                 }}>
-                                    Price:<span className="text-success ml-2">${product.price}</span>
-                                </span>
+                                    Precio:<span className="text-success ml-2">${product.price}</span>
+                                </span>                                
                             </Col>
                             <Col sm>
                                 <b>Comprar</b>
                                 <hr />
                                 {product.stock ?
-                                    <Link to={`${product.id}/checkout/`}>
-                                        <button className="btn btn-success">
-                                            <span>Añadir al Carrito</span>
-                                        </button>
-                                    </Link>
+                                    <Form method='POST'>
+                                        <Form.Group controlId='amount'>
+                                            <Form.Label>
+                                                <b>
+                                                    Cantidad a Comprar
+                                                </b>
+                                            </Form.Label>
+                                            <Form.Control
+                                                required
+                                                type="text"
+                                                value={amount}
+                                                placeholder="10"
+                                                step="0"
+                                                maxLength="8"
+                                                onChange={(e) => setAmount(e.target.value)}
+                                            >
+                                            </Form.Control>
+                                        </Form.Group>
+                                        <br></br>
+                                        <Button
+                                            type="button"
+                                            onClick={onSubmit}
+                                            variant='success'
+                                            className="btn-sm button-focus-css"
+                                        >
+                                            Añadir al Carrito
+                                        </Button>
+                                    </Form>
                                     :
                                     <Message variant='danger'>
                                         Agotado!

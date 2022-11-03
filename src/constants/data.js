@@ -54,3 +54,7 @@ export let userData = [
         id:"1233"
     }
 ]
+
+export let shoppingCart = []
+
+export let sales = []

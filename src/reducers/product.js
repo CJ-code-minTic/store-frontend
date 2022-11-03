@@ -27,6 +27,25 @@ import {
     CHANGE_DELIVERY_STATUS_FAIL,
     CHANGE_DELIVERY_STATUS_RESET,
 
+    ADD_SHOPPING_CART_REQUEST,
+    ADD_SHOPPING_CART_SUCCESS,
+    ADD_SHOPPING_CART_FAIL,
+    ADD_SHOPPING_CART_RESET,
+    SHOPPING_CART_LIST_REQUEST,
+    SHOPPING_CART_LIST_SUCCESS,
+    SHOPPING_CART_LIST_FAIL,
+    DELETE_PRODUCT_SHOPPING_CART_REQUEST,
+    DELETE_PRODUCT_SHOPPING_CART_SUCCESS,
+    DELETE_PRODUCT_SHOPPING_CART_FAIL,
+    DELETE_PRODUCT_SHOPPING_CART_RESET,
+    FINISH_SHOP_REQUEST,
+    FINISH_SHOP_SUCCESS,
+    FINISH_SHOP_FAIL,
+    FINISH_SHOP_RESET,
+    SALES_LIST_SUCCESS,
+    SALES_LIST_FAIL,
+    SALES_LIST_REQUEST
+
 
 } from '../constants/index'
 
@@ -236,6 +255,181 @@ export const changeDeliveryStatusReducer = (state = {}, action) => {
                 success: false,
                 error: ""
             }
+        default:
+            return state
+    }
+}
+
+export const addShoppingCartReducer = (state = { shoppingCart:{} },action) =>{
+    switch(action.type){
+        case ADD_SHOPPING_CART_REQUEST:
+            return {
+                ...state,
+                loading:true,                
+                success:false,
+                shoppingCart:{},                
+                error:""
+            }
+        case ADD_SHOPPING_CART_SUCCESS:
+            return {
+                ...state,
+                loading:false,                
+                success:true,
+                shoppingCart:action.payload,                
+                error:""
+            }
+        case ADD_SHOPPING_CART_FAIL:
+            return {
+                ...state,
+                loading:false,                
+                success:false,
+                shoppingCart:{},                
+                error:action.payload
+            }
+        case ADD_SHOPPING_CART_RESET:
+            return {
+                ...state,
+                loading:false,                
+                success:false,
+                shoppingCart:{},                
+                error:""
+            }
+        default:
+            return state
+    }
+}
+
+export const getProductsShoppingCartReducer = (state = {shoppingCart:[]}, action ) => {
+    switch(action.type){
+        case SHOPPING_CART_LIST_REQUEST:
+            return {
+                ...state,
+                loading:true,                                
+                shoppingCart:[],
+                total:0,
+                error:""
+            }
+        case SHOPPING_CART_LIST_SUCCESS:
+            return {
+                ...state,
+                loading:false,
+                shoppingCart:action.payload,
+                total:action.total,
+                error:""
+            }
+        case SHOPPING_CART_LIST_FAIL:
+            return {
+                ...state,
+                loading:false,
+                total:0,
+                error:action.payload
+            }        
+        default:
+            return state
+    }
+}
+
+export const deleteProductShoppingCartReducer = (state = {shoppingCart: []},action) => {
+    switch (action.type) {
+        case DELETE_PRODUCT_SHOPPING_CART_REQUEST:
+            return {
+                ...state,
+                loading: true,
+                success: false,
+                error: ""
+            }
+        case DELETE_PRODUCT_SHOPPING_CART_SUCCESS:
+            return {
+                ...state,
+                loading: false,
+                success: true,
+                shoppingCart: [],
+                error: ""
+            }
+        case DELETE_PRODUCT_SHOPPING_CART_FAIL:
+            return {
+                ...state,
+                loading: false,
+                success: false,
+                error: action.payload
+            }
+        case DELETE_PRODUCT_SHOPPING_CART_RESET:
+            return {
+                ...state,
+                loading: false,
+                success: false,
+                shoppingCart: [],
+                error: ""
+            }
+        default:
+            return state
+    }
+}
+
+export const finishReducer = (state = {sales : {}},action) =>{
+    switch (action.type) {
+        case FINISH_SHOP_REQUEST:
+            return {
+                ...state,
+                loading:true,                
+                success:false,
+                sales:{},                
+                error:""
+            }
+        case FINISH_SHOP_SUCCESS:
+            return {
+                ...state,
+                loading:false,                
+                success:true,
+                sales:action.payload,                
+                error:""
+            }
+        case FINISH_SHOP_FAIL:
+            return {
+                ...state,
+                loading:false,                
+                success:false,
+                sales:{},                
+                error:action.payload
+            }
+        case FINISH_SHOP_RESET:
+            return {
+                ...state,
+                loading:false,                
+                success:false,
+                sales:{},                
+                error:""
+            }
+        default:
+            return state
+    }
+}
+
+export const getSalesReducer = (state = {sales:[]},action) =>{
+    switch(action.type){
+        case SALES_LIST_REQUEST:
+            return {
+                ...state,
+                loading:true,                                
+                sales:[],
+                total:0,
+                error:""
+            }
+        case SALES_LIST_SUCCESS:
+            return {
+                ...state,
+                loading:false,
+                sales:action.payload,
+                total:action.total,
+                error:""
+            }
+        case SALES_LIST_FAIL:
+            return {
+                ...state,
+                loading:false,
+                total:0,
+                error:action.payload
+            }        
         default:
             return state
     }
