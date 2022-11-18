@@ -55,8 +55,6 @@ import {
 
 import axios from 'axios'
 
-import { userData } from '../constants/data'
-
 // Login
 export const login = (username, password) => async (dispatch) => {
     try {
@@ -64,36 +62,29 @@ export const login = (username, password) => async (dispatch) => {
             type: USER_LOGIN_REQUEST
         })
 
-        // const config = {
-        //     headers: {
-        //         'Content-type': 'application/json'
-        //     }
-        // }
 
-        // const { data } = await axios.post(
-        //     '/account/login/',
-        //     { 'username': username, 'password': password },
-        //     config
-        // )
+        let request = JSON.stringify({
+            "username": username,
+            "password": password
+        });
 
-        let data = null
+        var config = {
+            method: 'post',
+            url: 'http://localhost:4000/login',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: request
+        };        
 
-        for(var i = 0;i<userData.length;i++){
-            if(userData[i].username == username && userData[i].password == password){
-                data = userData[i]
-            }
-        }
-
-        if(data == null){            
-            throw new Error("Datos Invalidos")
-        }
+        const { data } = await axios(config)
 
         dispatch({
             type: USER_LOGIN_SUCCESS,
             payload: data
         })
 
-        localStorage.setItem('userInfo', JSON.stringify(userData)) // will create a new key-value pair in localStorage
+        localStorage.setItem('userInfo', JSON.stringify(data)) // will create a new key-value pair in localStorage
         // also see store.js file
 
     } catch (error) {
@@ -542,16 +533,16 @@ export const getAllOrders = () => async (dispatch, getState) => {
 }
 
 
-export const getCurrentProfile = () => async(dispatch) =>{
+export const getCurrentProfile = () => async (dispatch) => {
     try {
 
         const userInfo = localStorage.getItem("userInfo")
         console.log(userInfo)
         dispatch({
-            type:USER_INFO,
+            type: USER_INFO,
             payload: userInfo
-        })        
+        })
     } catch (error) {
-        
+
     }
 }

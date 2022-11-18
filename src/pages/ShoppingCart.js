@@ -75,7 +75,7 @@ function ShopingCartListPage() {
             </span>}
             <div>
                 <Row>                    
-                    {(shoppingCart.length === 0 ? showNothingMessage() : (shoppingCart).map((cart, idx) => (
+                    {(shoppingCart.products ? showNothingMessage() : (shoppingCart.products).map((cart, idx) => (
                         <Col key={cart.id} sm={12} md={6} lg={4} xl={3}>
                             <div className="mx-2"> 
                                 <ProductShoppingCart product={cart} />

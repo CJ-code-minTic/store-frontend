@@ -23,7 +23,7 @@ function ProductDetailsPage({ history, match }) {
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
-    const [amount, setAmount] = useState("")
+    const [amount, setAmount] = useState("")    
 
     // product details reducer
     const productDetailsReducer = useSelector(state => state.productDetailsReducer)
@@ -60,12 +60,24 @@ function ProductDetailsPage({ history, match }) {
         handleClose()
     }
 
-    const onSubmit = () => {
-        let data = {
-            id: id,
-            amount: parseInt(amount)
-        }
-        dispatch(addShoppingCart(data))
+    const onSubmit = () => {        
+        if(userInfo){
+            if(amount == ''){
+                alert("Cantidad Requerida")
+            }else{
+                let data = {
+                    id: id,
+                    amount: parseInt(amount),
+                    price: parseFloat(product.price)
+                }            
+                dispatch(addShoppingCart(data))
+            }            
+        }else{
+            navigate("/login")            
+            dispatch({
+                type: ADD_SHOPPING_CART_RESET
+            })
+        }        
     }
 
     // after product deletion

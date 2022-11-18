@@ -17,11 +17,7 @@ import {
 
     UPDATE_PRODUCT_REQUEST,
     UPDATE_PRODUCT_SUCCESS,
-    UPDATE_PRODUCT_FAIL,
-
-    CHANGE_DELIVERY_STATUS_REQUEST,
-    CHANGE_DELIVERY_STATUS_SUCCESS,
-    CHANGE_DELIVERY_STATUS_FAIL,
+    UPDATE_PRODUCT_FAIL,    
     
     ADD_SHOPPING_CART_REQUEST,
     ADD_SHOPPING_CART_SUCCESS,
@@ -43,10 +39,8 @@ import {
 
 } from '../constants/index'
 
-//import axios from 'axios'
+import axios from 'axios'
 import { productData,shoppingCart,sales } from '../constants/data'
-
-const aux = false
 
 export const getProductsList = () => async (dispatch) => {
     try {
@@ -55,13 +49,11 @@ export const getProductsList = () => async (dispatch) => {
         })
 
         // call api
-        //const { data } = await axios.get("/api/products/")
-        
-
+        const { data } = await axios.get("http://localhost:4000/product")    
 
         dispatch({
             type: PRODUCTS_LIST_SUCCESS,
-            payload: productData
+            payload: data
         })
     } catch (error) {
         dispatch({
@@ -78,18 +70,11 @@ export const getProductDetails = (id) => async (dispatch) => {
         })
 
         // call api
-        //const { data } = await axios.get(`/api/product/${id}/`)
-        let dataDetail
-
-        for(var i = 0;i<productData.length;i++){
-            if(productData[i].id === id){
-                dataDetail = productData[i]
-            } 
-        }
+        const { data } = await axios.get(`http://localhost:4000/product/${id}`)        
 
         dispatch({
             type: PRODUCT_DETAILS_SUCCESS,
-            payload: dataDetail
+            payload: data
         })
     } catch (error) {
         dispatch({
@@ -246,7 +231,7 @@ export const updateProduct = (id, product) => async (dispatch, getState) => {
     }
 }
 
-export const addShoppingCart = (data) => async (dispatch,getState)=>{
+export const addShoppingCart = (requestData) => async (dispatch,getState)=>{
     try {
         dispatch({
             type:ADD_SHOPPING_CART_REQUEST
@@ -254,51 +239,36 @@ export const addShoppingCart = (data) => async (dispatch,getState)=>{
 
         const {
             userLoginReducer: {userInfo}
-        } = getState ()
-
-        let newProduct = true;
-
-        let cartData = {
-            id:null,
-            image:null,
-            name:null,
-            amount:null,
-            price:null,
-            totalPrice:null
-        }
-
-        for(var i = 0;i<productData.length;i++){
-            if(productData[i].id === data.id){
-                if(productData[i].amount < data.amount){
-                    throw new Error("Cantidad No Disponible")
-                }
-                cartData.id = productData[i].id
-                cartData.image = productData[i].image
-                cartData.name = productData[i].name
-                cartData.amount = data.amount
-                cartData.price = productData[i].price
-                cartData.totalPrice = productData[i].price * data.amount
-                productData[i].amount -= data.amount
-                if(productData[i].amount === 0)productData[i].stock = false
+        } = getState ()                
+        
+        let request = JSON.stringify({
+            "user": userInfo.attributes._id,
+            "product":{
+                "productId":requestData.id,
+                "amount":requestData.amount,
+                "price":requestData.price
             }
-        }
+        });
 
-        for(var i=0;i<shoppingCart.length;i++){
-            if(shoppingCart[i].id === data.id){
-                shoppingCart[i].amount += data.amount
-                shoppingCart[i].totalPrice = shoppingCart[i].amount * shoppingCart[i].price
-                newProduct = false;
-            }
-        }        
+        var config = {
+            method: 'post',
+            url: 'http://localhost:4000/cart',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${userInfo.token}`
+            },
+            data: request
+        };        
 
-        if(newProduct)shoppingCart.push(cartData)
+        const { data } = await axios(config)
         
         dispatch({
             type:ADD_SHOPPING_CART_SUCCESS,
-            payload: shoppingCart
-        })        
+            payload: data
+        })
 
-    } catch (error) {        
+    } catch (error) {
+        console.log(error)        
         dispatch({
             type: ADD_SHOPPING_CART_FAIL,
             payload: error.response && error.response.data.detail ? error.response.data.detail : error.message            
@@ -306,23 +276,32 @@ export const addShoppingCart = (data) => async (dispatch,getState)=>{
     }
 }
 
-export const getProductsShoppingCart = () => async(dispatch) => {
+export const getProductsShoppingCart = () => async(dispatch,getState) => {
     try {
 
         dispatch({
             type:SHOPPING_CART_LIST_REQUEST
         })
 
-        let totalCart = 0
-
-        for(var i=0;i<shoppingCart.length;i++){
-            totalCart += shoppingCart[i].totalPrice
-        }        
+        const {
+            userLoginReducer: {userInfo}
+        } = getState ()
+        
+        var config = {
+            method: 'get',
+            url: `http://localhost:4000/cart/${userInfo.attributes._id}`,
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${userInfo.token}`
+            }            
+        };
+        
+        const { data } = await axios(config)
 
         dispatch({
             type:SHOPPING_CART_LIST_SUCCESS,
-            payload: shoppingCart,
-            total: totalCart
+            payload: data,
+            total: data.total
         })
         
     } catch (error) {

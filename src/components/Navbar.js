@@ -44,13 +44,13 @@ function NavBar() {
 
                             {/* New Product (Admins Only) */}
 
-                            {userInfo && userInfo.admin ?
+                            {userInfo && userInfo.attributes.admin ?
                                 <LinkContainer to="/new-product/">
                                     <Nav.Link >Adicionar Producto</Nav.Link>
                                 </LinkContainer>                                
                                 : ""
                             }
-                            {userInfo && userInfo.admin ?
+                            {userInfo && userInfo.attributes.admin ?
                                 <LinkContainer to="/sales/">
                                     <Nav.Link >Ventas</Nav.Link>
                                 </LinkContainer>                                
@@ -67,19 +67,7 @@ function NavBar() {
 
                         {userInfo ?
                             <div>
-                                <NavDropdown className="navbar-nav text-capitalize" title={userInfo.username} id='username'>
-                                    <LinkContainer to="/account">
-                                        <NavDropdown.Item>Account Settings</NavDropdown.Item>
-                                    </LinkContainer>
-                                    <LinkContainer to="/all-addresses/">
-                                        <NavDropdown.Item>Address Settings</NavDropdown.Item>
-                                    </LinkContainer>
-                                    <LinkContainer to="/stripe-card-details/">
-                                        <NavDropdown.Item>Card Settings</NavDropdown.Item>
-                                    </LinkContainer>
-                                    <LinkContainer to="/all-orders/">
-                                        <NavDropdown.Item>All Orders</NavDropdown.Item>
-                                    </LinkContainer>
+                                <NavDropdown className="navbar-nav text-capitalize" title={userInfo.attributes.username} id='username'>                                    
                                     <NavDropdown.Item onClick={logoutHandler}>
                                         Logout
                                     </NavDropdown.Item>
