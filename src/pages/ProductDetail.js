@@ -7,12 +7,9 @@ import { useNavigate } from 'react-router-dom'
 import { CREATE_PRODUCT_RESET, DELETE_PRODUCT_RESET, UPDATE_PRODUCT_RESET, CARD_CREATE_RESET, ADD_SHOPPING_CART_RESET } from '../constants'
 import { useParams } from "react-router-dom";
 
-
 function ProductDetailsPage({ history, match }) {
 
     let { id } = useParams();
-
-
 
     let navigate = useNavigate();
 
