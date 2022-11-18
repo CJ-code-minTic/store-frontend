@@ -50,7 +50,7 @@ function NavBar() {
                                 : ""
                             }
                             {userInfo && userInfo.attributes.admin ?
-                                <LinkContainer to="/sales/">
+                                <LinkContainer to="/sales">
                                     <Nav.Link >Ventas</Nav.Link>
                                 </LinkContainer>                                
                                 : ""

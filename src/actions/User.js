@@ -88,9 +88,10 @@ export const login = (username, password) => async (dispatch) => {
         // also see store.js file
 
     } catch (error) {
+        console.log(error)
         dispatch({
             type: USER_LOGIN_FAIL,
-            payload: error.response && error.response.data.detail ? error.response.data.detail : error.message
+            payload: error.response && error.response.data.error.message ? error.response.data.error.message : error.message
         })
     }
 }
@@ -111,33 +112,34 @@ export const register = (username, email, password) => async (dispatch) => {
     try {
         dispatch({ type: USER_REGISTER_REQUEST })
 
-        const config = {
-            headers: {
-                'Content-type': 'application/json'
-            }
-        }
+        let request = JSON.stringify({
+            "username": username,
+            "email": email,
+            "password": password,
+            "admin": false
+        });
 
-        const { data } = await axios.post(`/account/register/`,
-            { 'username': username, 'email': email, 'password': password },
-            config
-        )
+        var config = {
+            method: 'post',
+            url: 'http://localhost:4000/user',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: request
+        };        
+
+        const { data } = await axios(config)        
 
         dispatch({
             type: USER_REGISTER_SUCCESS,
             payload: data
-        })
-
-        dispatch({
-            type: USER_LOGIN_SUCCESS,
-            payload: data
-        })
-
-        localStorage.setItem('userInfo', JSON.stringify(data))
+        })        
     }
     catch (error) {
+        console.log(error)
         dispatch({
             type: USER_REGISTER_FAIL,
-            payload: error.response && error.response.data.detail ? error.response.data.detail : error.message
+            payload: error.response && error.response.data.message ? error.response.data.message : error.message
         })
     }
 }

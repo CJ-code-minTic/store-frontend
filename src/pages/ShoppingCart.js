@@ -7,6 +7,7 @@ import ProductShoppingCart from '../components/ProductShoppingCart'
 import { useLocation,useNavigate } from "react-router-dom";
 import { ADD_SHOPPING_CART_RESET, DELETE_PRODUCT_SHOPPING_CART_RESET, FINISH_SHOP_RESET } from '../constants'
 
+
 function ShopingCartListPage() {
 
     let navigate = useNavigate()
@@ -39,8 +40,9 @@ function ShopingCartListPage() {
         )
     }
 
-    const confirmDelete = () =>{
+    const confirmDelete = () =>{        
         dispatch(deleteProductShoppingCart())
+        
     }
 
     const confirmSale = () =>{
@@ -74,7 +76,7 @@ function ShopingCartListPage() {
             </span>}
             <div>
                 <Row>                    
-                    {(shoppingCart.products ? showNothingMessage() : (shoppingCart.products).map((cart, idx) => (
+                    {(shoppingCart.length === 0 ? showNothingMessage() : (shoppingCart).map((cart, idx) => (
                         <Col key={cart.id} sm={12} md={6} lg={4} xl={3}>
                             <div className="mx-2"> 
                                 <ProductShoppingCart product={cart} />
@@ -84,6 +86,7 @@ function ShopingCartListPage() {
                     ))}
                 </Row>
             </div>
+            {shoppingCart.length === 0 ? null:
             <div>
                 <Row>
                     <Col>
@@ -109,6 +112,7 @@ function ShopingCartListPage() {
                     </Col>
                 </Row>
             </div>
+            }
         </div>
     )
 }

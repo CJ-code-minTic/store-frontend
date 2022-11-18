@@ -58,7 +58,7 @@ export const getProductsList = () => async (dispatch) => {
     } catch (error) {
         dispatch({
             type: PRODUCTS_LIST_FAIL,
-            payload: error.message
+            payload: error.response && error.response.data.message ? error.response.data.message : error.message
         })
     }
 }
@@ -79,7 +79,7 @@ export const getProductDetails = (id) => async (dispatch) => {
     } catch (error) {
         dispatch({
             type: PRODUCT_DETAILS_FAIL,
-            payload: error.message
+            payload: error.response && error.response.data.message ? error.response.data.message : error.message
         })
     }
 }
@@ -122,7 +122,7 @@ export const deleteProduct = (id) => async (dispatch, getState) => {
     } catch (error) {
         dispatch({
             type: DELETE_PRODUCT_FAIL,
-            payload: error.response && error.response.data.detail ? error.response.data.detail : error.message
+            payload: error.response && error.response.data.message ? error.response.data.message : error.message
         })
     }
 }
@@ -172,7 +172,7 @@ export const createProduct = (product) => async (dispatch, getState) => {
     } catch (error) {
         dispatch({
             type: CREATE_PRODUCT_FAIL,
-            payload: error.response && error.response.data.detail ? error.response.data.detail : error.message
+            payload: error.response && error.response.data.message ? error.response.data.message : error.message
         })
     }
 }
@@ -226,7 +226,7 @@ export const updateProduct = (id, product) => async (dispatch, getState) => {
     } catch (error) {
         dispatch({
             type: UPDATE_PRODUCT_FAIL,
-            payload: error.response && error.response.data.detail ? error.response.data.detail : error.message
+            payload: error.response && error.response.data.message ? error.response.data.message : error.message
         })
     }
 }
@@ -271,7 +271,7 @@ export const addShoppingCart = (requestData) => async (dispatch,getState)=>{
         console.log(error)        
         dispatch({
             type: ADD_SHOPPING_CART_FAIL,
-            payload: error.response && error.response.data.detail ? error.response.data.detail : error.message            
+            payload: error.response && error.response.data.message ? error.response.data.message : error.message
         })
     }
 }
@@ -296,47 +296,47 @@ export const getProductsShoppingCart = () => async(dispatch,getState) => {
             }            
         };
         
-        const { data } = await axios(config)
+        const { data } = await axios(config)        
 
         dispatch({
             type:SHOPPING_CART_LIST_SUCCESS,
-            payload: data,
+            payload: data.products,
             total: data.total
         })
         
-    } catch (error) {
+    } catch (error) {        
         dispatch({
             type:SHOPPING_CART_LIST_FAIL,
-            payload: error.message
+            payload: error.response && error.response.data.message ? error.response.data.message : error.message
         })
     }
 }
 
-export const deleteProductShoppingCart = () => async (dispatch) => {
+export const deleteProductShoppingCart = () => async (dispatch,getState) => {
     try {
 
         dispatch({
             type:DELETE_PRODUCT_SHOPPING_CART_REQUEST
         })
 
-        const length = shoppingCart.length
-
-        for(var i=0;i<length;i++){            
-            for(var j=0;j<productData.length;j++){
-                if(productData[j].id === shoppingCart[i].id){
-                    productData[j].amount += shoppingCart[i].amount
-                    productData[j].stock = true
-                }                
-            }                        
-        }
-
-        for(var i=0;i<=length;i++){
-            shoppingCart.splice(i)
-        }                
+        const {
+            userLoginReducer: {userInfo}
+        } = getState ()
+        
+        var config = {
+            method: 'delete',
+            url: `http://localhost:4000/cart/${userInfo.attributes._id}`,
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${userInfo.token}`
+            }            
+        };
+        
+        const { data } = await axios(config)
 
         dispatch({
             type:DELETE_PRODUCT_SHOPPING_CART_SUCCESS,
-            data:shoppingCart
+            data:data
         })
         
     } catch (error) {                
@@ -347,41 +347,35 @@ export const deleteProductShoppingCart = () => async (dispatch) => {
     }
 }
 
-export const finish = () => (dispatch) =>{
+export const finish = () => async (dispatch,getState) => {
     try {
         dispatch({
             type:FINISH_SHOP_REQUEST
         })        
-
-        let total = 0
-
-        let salesData = {
-            id:null,
-            date:null,
-            total:null
-        }
-
-        for(var i=0;i<shoppingCart.length;i++){
-            total += shoppingCart[i].totalPrice
-        }
-
-        for(var i=0;i<=shoppingCart.length;i++){
-            shoppingCart.splice(i)
-        }
-
-        let today = new Date()        
         
-        salesData.id = uuidv4()
-        salesData.date = today.toLocaleDateString()
-        salesData.total = total
+        const {
+            userLoginReducer: {userInfo}
+        } = getState ()                
+        
+        let request = JSON.stringify({
+            "user": userInfo.attributes._id            
+        });
 
-        sales.push(salesData)
+        var config = {
+            method: 'post',
+            url: 'http://localhost:4000/sale',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${userInfo.token}`
+            },
+            data: request
+        };        
 
-        console.log(sales)
+        const { data } = await axios(config)
 
         dispatch({
             type:FINISH_SHOP_SUCCESS,
-            payload: sales            
+            payload: data            
         })
     } catch (error) {
         dispatch({
@@ -391,21 +385,36 @@ export const finish = () => (dispatch) =>{
     }
 }
 
-export const getSales = () => async(dispatch) =>{
+export const getSales = () => async(dispatch,getState) =>{
     try {
         dispatch({
             type:SALES_LIST_REQUEST
         })
 
-        let totalSales = 0;
+        const {
+            userLoginReducer: {userInfo}
+        } = getState ()
+        
+        var config = {
+            method: 'get',
+            url: `http://localhost:4000/sale`,
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${userInfo.token}`
+            }            
+        };
+        
+        const { data } = await axios(config)
 
-        for(var i=0;i<sales.length;i++){
-            totalSales += sales[i].total
-        }        
+        let totalSales = 0
+
+        data.forEach(d => {
+            totalSales += d.total
+        });
 
         dispatch({
             type:SALES_LIST_SUCCESS,
-            payload:sales,
+            payload:data,
             total:totalSales
         })
     } catch (error) {

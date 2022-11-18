@@ -9,8 +9,8 @@ import ProductUpdatePage from './pages/ProductUpdate'
 import CheckoutPage from './pages/Checkout'
 import ShopingCartListPage from './pages/ShoppingCart'
 import Sales from './pages/Sales'
+import Register from './pages/Register'
 // import PaymentStatus from './components/PaymentStatus'
-// import Register from './pages/RegisterPage'
 // import CardUpdatePage from './pages/CardUpdatePage'
 // import CardDetailsPage from './pages/CardDetailsPage'
 // import AccountPage from './pages/AccountPage'
@@ -38,10 +38,10 @@ const App = () => {
             <Route path="/product/:idCheck/checkout/" element={<CheckoutPage/>} exact />
             <Route path="/shopping-cart/" element={<ShopingCartListPage/>} exact />
             <Route path="/sales" element={<Sales/>} exact />
+            <Route path="/register" element={<Register/>} exact />
             <Route path="" element={<NotFound/>} exact />
             {/*             
-            <Route path="/payment-status" component={PaymentStatus} exact />            
-            <Route path="/register" component={Register} exact />
+            <Route path="/payment-status" component={PaymentStatus} exact />                        
             <Route path="/account" component={AccountPage} exact />
             <Route path="/account/update/" component={AccountUpdatePage} exact />
             <Route path="/account/delete/" component={DeleteUserAccountPage} exact />

@@ -138,7 +138,7 @@ function ProductDetailsPage({ history, match }) {
 
                                 {/* Product edit and delete conditions */}
 
-                                {userInfo && userInfo.admin ?
+                                {userInfo && userInfo.attributes.admin ?
                                     <span style={{ display: "flex" }}>
                                         < button
                                             className="btn mt-2 btn-danger btn-sm button-focus-css"
@@ -149,7 +149,7 @@ function ProductDetailsPage({ history, match }) {
 
                                         <button
                                             className="ml-2 mt-2 btn btn-primary btn-sm button-focus-css"
-                                            onClick={() => navigate(`/product-update/${product.id}/`)}
+                                            onClick={() => navigate(`/product-update/${product._id}/`)}
                                             style={{ width: "100%" }}
                                         >Editar Producto
                                         </button>

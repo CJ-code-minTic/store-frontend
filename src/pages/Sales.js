@@ -31,7 +31,7 @@ function Sales() {
       <tbody>
         {sales.map((sale,idx)=>(
             <tr>
-                <td>{sale.id}</td>
+                <td>{sale._id}</td>
                 <td>{sale.date}</td>
                 <td>{sale.total}</td>
             </tr>

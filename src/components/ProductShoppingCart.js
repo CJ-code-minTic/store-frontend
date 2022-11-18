@@ -18,7 +18,7 @@ function ProductShoppingCart({ product }) {
                         Cantidad: {product.amount}
                     </Card.Text>
                     <Card.Text as="h3">
-                        Total: $ {product.totalPrice}
+                        Total: $ {product.total}
                     </Card.Text>
                 </Card.Body>                
             </Card>
