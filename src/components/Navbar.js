@@ -37,9 +37,9 @@ function NavBar() {
                             <LinkContainer to="/">
                                 <Nav.Link >Productos</Nav.Link>
                             </LinkContainer>
-                            <LinkContainer to="/shopping-cart">
+                            {userInfo ? <LinkContainer to="/shopping-cart">
                                 <Nav.Link >Carrito de Compras</Nav.Link>
-                            </LinkContainer>
+                            </LinkContainer>: ""}
 
                             {/* New Product (Admins Only) */}
 

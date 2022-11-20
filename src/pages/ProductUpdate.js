@@ -12,6 +12,7 @@ const ProductUpdatePage = ({ match }) => {
 
     let { id } = useParams();
 
+    
     // product details reducer
     const productDetailsReducer = useSelector(state => state.productDetailsReducer)
     const { loading: loadingPageDetails, product } = productDetailsReducer
@@ -54,7 +55,7 @@ const ProductUpdatePage = ({ match }) => {
 
     // get product details
     useEffect(() => {
-        if (!userInfo || !userInfo.admin) {
+        if (!userInfo || !userInfo.attributes.admin) {
             navigate("/login")
         }
         dispatch(checkTokenValidation())
@@ -80,7 +81,7 @@ const ProductUpdatePage = ({ match }) => {
         dispatch({
             type: UPDATE_PRODUCT_RESET
         })
-        navigate(`/product/${product.id}`)
+        navigate(`/product/${product._id}`)
     }
 
 
@@ -245,7 +246,7 @@ const ProductUpdatePage = ({ match }) => {
                     Guardar Cambios
                 </Button>
                 <Button
-                    onClick={() => navigate(`/product/${product.id}`)}
+                    onClick={() => navigate(`/product/${product._id}`)}
                     variant='primary'
                     className="btn-sm ml-2 button-focus-css mb-4"
                 >
