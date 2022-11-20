@@ -54,16 +54,16 @@ const ProductUpdatePage = ({ match }) => {
 
     // get product details
     useEffect(() => {
-        if (!userInfo || !userInfo.admin) {
+        if (!userInfo || !userInfo.attributes.admin) {
             navigate("/login")
         }
-        dispatch(checkTokenValidation())
+    
         dispatch(getProductDetails(id))
     }, [dispatch, userInfo, navigate, match])
 
     const onSubmit = (e) => {
         e.preventDefault()
-        const productId = product.id
+
         let data = {
             name: name,
             description: description,
@@ -72,7 +72,7 @@ const ProductUpdatePage = ({ match }) => {
             image: image
         }
 
-        dispatch(updateProduct(productId, data))
+        dispatch(updateProduct(id, data))
     }
 
     if (productUpdationSuccess) {
@@ -80,7 +80,7 @@ const ProductUpdatePage = ({ match }) => {
         dispatch({
             type: UPDATE_PRODUCT_RESET
         })
-        navigate(`/product/${product.id}`)
+        navigate(`/product/${id}`)
     }
 
 

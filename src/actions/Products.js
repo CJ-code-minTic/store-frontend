@@ -96,39 +96,18 @@ export const deleteProduct = (id) => async (dispatch, getState) => {
         
         var config = {
             method: 'delete',
-            url: `http://localhost:4000/product/${userInfo.attributes._id}`,
+            url: `http://localhost:4000/product/${id}`,
             headers: {
                 'Content-Type': 'application/json',
                 Authorization: `Bearer ${userInfo.token}`
             }            
         };
-        // login reducer
-        // const {
-        //     userLoginReducer: { userInfo },
-        // } = getState()
-
-        // const config = {
-        //     headers: {
-        //         "Content-Type": "application/json",
-        //         Authorization: `Bearer ${userInfo.token}`
-        //     }
-        // }
-
-        // // api call
-        // const { data } = await axios.delete(
-        //     `/api/product-delete/${id}/`,
-        //     config
-        // )
-
-        for(var i = 0;i<productData.length;i++){            
-            if(productData[i].id === id){                
-                productData.splice(i,1)
-            } 
-        }        
-
+        
+        let {data} = await axios(config)
+        
         dispatch({
             type: DELETE_PRODUCT_SUCCESS,
-            payload: productData
+            payload: data
         })
 
     } catch (error) {
@@ -196,62 +175,28 @@ export const updateProduct = (id, product) => async (dispatch, getState) => {
         } = getState ()                
         
         let request = JSON.stringify({
-            "user": userInfo.attributes._id,
-            "product":{
                 "image": product.image,
                 "name": product.name,
                 "description": product.description,
                 "price": product.price,
                 "amount": product.amount
-            }
         });
 
         var config = {
             method: 'put',
-            url: `http://localhost:4000/product/${userInfo.attributes._id}`,
+            url: `http://localhost:4000/product/${id}`,
             headers: {
                 'Content-Type': 'application/json',
                 Authorization: `Bearer ${userInfo.token}`
             },
             data: request
         }; 
-        // login reducer
-        // const {
-        //     userLoginReducer: { userInfo },
-        // } = getState()
-
-        // const config = {
-        //     headers: {
-        //         "Content-Type": "multipart/form-data",
-        //         Authorization: `Bearer ${userInfo.token}`
-        //     }
-        // }
-
-        // // api call
-        // const { data } = await axios.put(
-        //     `/api/product-update/${id}/`,
-        //     product,
-        //     config
-        // )
-
-        product.id = id
-
-        if(product.amount > 0){
-            product.stock = true
-        }
-        else{
-            product.stock = false
-        }
-
-        for(var i = 0;i<productData.length;i++){            
-            if(productData[i].id === id){                                
-                productData[i] = product                
-            } 
-        }                
-
+        
+        let {data} = await axios(config)
+       
         dispatch({
             type: UPDATE_PRODUCT_SUCCESS,
-            payload: productData
+            payload: data
         })
 
     } catch (error) {
