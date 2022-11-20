@@ -149,7 +149,7 @@ function ProductDetailsPage({ history, match }) {
 
                                         <button
                                             className="ml-2 mt-2 btn btn-primary btn-sm button-focus-css"
-                                            onClick={() => navigate(`/product-update/${product._id}/`)}
+                                            onClick={() => navigate(`/product-update/${product._id}`)}
                                             style={{ width: "100%" }}
                                         >Editar Producto
                                         </button>

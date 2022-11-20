@@ -35,7 +35,6 @@ const ProductCreatePage = () => {
         if (!userInfo) {
             navigate("/login")
         }
-        dispatch(checkTokenValidation())
     }, [dispatch, userInfo, navigate])
 
     const onSubmit = (e) => {
@@ -53,8 +52,9 @@ const ProductCreatePage = () => {
     }
 
     if (productCreationSuccess) {
+        console.log(product)
         alert("Product successfully created.")
-        navigate(`/product/${product.id}/`)
+        navigate(`/product/${product._id}`)
         dispatch({
             type: CREATE_PRODUCT_RESET
         })
@@ -69,7 +69,7 @@ const ProductCreatePage = () => {
 
     return (
         <div>
-            {productCreationError && <Message variant='danger'>{productCreationError.image[0]}</Message>}
+            {productCreationError && <Message variant='danger'>{productCreationError}</Message>}
             <span
                 className="d-flex justify-content-center text-info"
                 >

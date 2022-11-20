@@ -90,6 +90,18 @@ export const deleteProduct = (id) => async (dispatch, getState) => {
             type: DELETE_PRODUCT_REQUEST
         })
 
+        const {
+            userLoginReducer: {userInfo}
+        } = getState ()
+        
+        var config = {
+            method: 'delete',
+            url: `http://localhost:4000/product/${userInfo.attributes._id}`,
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${userInfo.token}`
+            }            
+        };
         // login reducer
         // const {
         //     userLoginReducer: { userInfo },
@@ -134,42 +146,37 @@ export const createProduct = (product) => async (dispatch, getState) => {
             type: CREATE_PRODUCT_REQUEST
         })
 
-        // login reducer
-        // const {
-        //     userLoginReducer: { userInfo },
-        // } = getState()
+        const {
+            userLoginReducer: {userInfo}
+        } = getState ()                
+        
+        let request = JSON.stringify({
+                "image": product.image,
+                "name": product.name,
+                "description": product.description,
+                "price": product.price,
+                "amount": product.amount
+        });
 
-        // const config = {
-        //     headers: {
-        //         "Content-Type": "multipart/form-data",
-        //         Authorization: `Bearer ${userInfo.token}`
-        //     }
-        // }
-
-        // // api call
-        // const { data } = await axios.post(
-        //     "/api/product-create/",
-        //     product,
-        //     config
-        // )       
-
-        if(product.amount > 0){
-            product.stock = true
-        }
-        else{
-            product.stock = false
-        }
-        product.id = uuidv4()
-
-        let data = product        
-
-        productData.push(data)        
+        var config = {
+            method: 'post',
+            url: 'http://localhost:4000/product',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${userInfo.token}`
+            },
+            data: request
+        };  
+        
+        let {data} = await axios(config)
+       
 
         dispatch({
             type: CREATE_PRODUCT_SUCCESS,
             payload: data
         })
     } catch (error) {
+        console.log(error)
         dispatch({
             type: CREATE_PRODUCT_FAIL,
             payload: error.response && error.response.data.message ? error.response.data.message : error.message
@@ -184,6 +191,30 @@ export const updateProduct = (id, product) => async (dispatch, getState) => {
             type: UPDATE_PRODUCT_REQUEST
         })
 
+        const {
+            userLoginReducer: {userInfo}
+        } = getState ()                
+        
+        let request = JSON.stringify({
+            "user": userInfo.attributes._id,
+            "product":{
+                "image": product.image,
+                "name": product.name,
+                "description": product.description,
+                "price": product.price,
+                "amount": product.amount
+            }
+        });
+
+        var config = {
+            method: 'put',
+            url: `http://localhost:4000/product/${userInfo.attributes._id}`,
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${userInfo.token}`
+            },
+            data: request
+        }; 
         // login reducer
         // const {
         //     userLoginReducer: { userInfo },
