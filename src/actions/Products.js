@@ -40,7 +40,6 @@ import {
 } from '../constants/index'
 
 import axios from 'axios'
-import { productData,shoppingCart,sales } from '../constants/data'
 
 export const getProductsList = () => async (dispatch) => {
     try {
@@ -127,17 +126,31 @@ export const createProduct = (product) => async (dispatch, getState) => {
 
         const {
             userLoginReducer: {userInfo}
-        } = getState ()                
+        } = getState ()                        
+
+        let config = {
+            method: 'post',
+            url: 'http://localhost:4000/product/image',
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                Authorization: `Bearer ${userInfo.token}`
+            },
+            data: {
+                "image":product.image
+            }
+        };  
+        
+        var {data} = await axios(config)        
         
         let request = JSON.stringify({
-                "image": product.image,
+                "image": `http://localhost:4000/${data.imageName}`,
                 "name": product.name,
                 "description": product.description,
                 "price": product.price,
                 "amount": product.amount
         });
 
-        var config = {
+        config = {
             method: 'post',
             url: 'http://localhost:4000/product',
             headers: {
@@ -147,7 +160,7 @@ export const createProduct = (product) => async (dispatch, getState) => {
             data: request
         };  
         
-        let {data} = await axios(config)
+        var {data} = await axios(config)
        
 
         dispatch({
@@ -173,9 +186,29 @@ export const updateProduct = (id, product) => async (dispatch, getState) => {
         const {
             userLoginReducer: {userInfo}
         } = getState ()                
+
+        let imageUrl = product.image
+
+        if(typeof(product.image) === 'object'){
+            let config = {
+                method: 'post',
+                url: 'http://localhost:4000/product/image',
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    Authorization: `Bearer ${userInfo.token}`
+                },
+                data: {
+                    "image":product.image
+                }
+            };  
+            
+            let {data} = await axios(config)
+
+            imageUrl = `http://localhost:4000/${data.imageName}`
+        }                
         
         let request = JSON.stringify({
-                "image": product.image,
+                "image": imageUrl,
                 "name": product.name,
                 "description": product.description,
                 "price": product.price,

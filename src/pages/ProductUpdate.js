@@ -12,7 +12,7 @@ const ProductUpdatePage = ({ match }) => {
 
     let { id } = useParams();
 
-    
+
     // product details reducer
     const productDetailsReducer = useSelector(state => state.productDetailsReducer)
     const { loading: loadingPageDetails, product } = productDetailsReducer
@@ -58,7 +58,7 @@ const ProductUpdatePage = ({ match }) => {
         if (!userInfo || !userInfo.attributes.admin) {
             navigate("/login")
         }
-    
+
         dispatch(getProductDetails(id))
     }, [dispatch, userInfo, navigate, match])
 
@@ -102,7 +102,7 @@ const ProductUpdatePage = ({ match }) => {
             {productUpdationError ? (
                 <div>
                     {scrollToTop()}
-                    <Message variant='danger'>{productUpdationError.image[0]}</Message>
+                    <Message variant='danger'>{productUpdationError}</Message>
                 </div>
             ) : ""}
             {loadingPageDetails && <span style={{ display: "flex" }}>
@@ -119,34 +119,23 @@ const ProductUpdatePage = ({ match }) => {
             </span> : ""}
             <Form onSubmit={onSubmit}>
 
-                <Form.Group controlId='image'>
+            <Form.Group controlId='image'>
                     <Form.Label>
                         <b>
                             Imagen
                         </b>
                     </Form.Label>
-                    <br></br>
                     <p>
                         <img src={product.image} alt={product.name} height="200" />
                     </p>
-                    <br></br>
+
                     {newImage ?
                         <div>
-                            <Form.Group controlId='image'>
-                                <Form.Label>
-                                    <b>
-                                        Imagen
-                                    </b>
-                                </Form.Label>
-                                <Form.Control
-                                    required
-                                    type="text"
-                                    defaultValue={product.image}
-                                    placeholder="URL Imagen"
-                                    onChange={(e) => setImage(e.target.value)}
-                                >
-                                </Form.Control>
-                            </Form.Group>
+                            <Form.Control
+                                type="file"
+                                onChange={(e) => setImage(e.target.files[0])}
+                            >
+                            </Form.Control>
 
                             <span
                                 onClick={() => {
@@ -167,7 +156,7 @@ const ProductUpdatePage = ({ match }) => {
                                 onClick={() => setNewImage(!newImage)}
                                 className="btn btn-success btn-sm"
                             >
-                                Cambiar Imagen
+                                Seleccione una Imagen Diferente
                             </span>
                         </p>
                     }

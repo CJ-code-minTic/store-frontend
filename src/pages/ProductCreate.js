@@ -15,9 +15,8 @@ const ProductCreatePage = () => {
     const [name, setName] = useState("")
     const [description, setDescription] = useState("")
     const [price, setPrice] = useState("")
-    const [amount, setAmount] = useState("")
-    const [image, setImage] = useState("")
-    //const [image, setImage] = useState(null)
+    const [amount, setAmount] = useState("")    
+    const [image, setImage] = useState(null)
 
     // login reducer
     const userLoginReducer = useSelector(state => state.userLoginReducer)
@@ -145,7 +144,7 @@ const ProductCreatePage = () => {
                     >
                     </Form.Control>
                 </Form.Group>                
-                <br></br>
+                <br></br>                                
                 <Form.Group controlId='image'>
                     <Form.Label>
                         <b>
@@ -154,28 +153,12 @@ const ProductCreatePage = () => {
                     </Form.Label>
                     <Form.Control
                         required
-                        type="text"                        
-                        value={image}
-                        placeholder="URL Imagen"                        
-                        onChange={(e) => setImage(e.target.value)}
-                    >
-                    </Form.Control>
-                </Form.Group>
-                <br></br>
-                {/* <Form.Group controlId='image'>
-                    <Form.Label>
-                        <b>
-                            Product Image
-                        </b>
-                    </Form.Label>
-                    <Form.Control
-                        required
                         type="file"
                         onChange={(e) => setImage(e.target.files[0])}
                     >
                     </Form.Control>
-                </Form.Group> */}
-
+                </Form.Group>
+                <br></br>
                 <Button
                     type="submit"
                     variant='success'
